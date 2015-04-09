@@ -1,0 +1,32 @@
+{% extends 'ThoniorMasterBundle::content.html.twig' %}
+
+{% block body -%}
+    <h1>Chapter</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Title</th>
+                <td>{{ entity.title }}</td>
+            </tr>
+            <tr>
+                <th>Content</th>
+                <td>{{ entity.content }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a class="manager" data-path="{{ path('chapter') }}" href="#chapter">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a class="manager" data-path="{{ path('chapter_edit', { 'id': entity.id }) }}" href="#chapter#{{entity.id}}#edit">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

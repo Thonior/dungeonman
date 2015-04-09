@@ -1,0 +1,39 @@
+{% extends 'ThoniorMasterBundle::base.html.twig' %}
+
+{% block body -%}
+    <h1>Campaign list</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Rating</th>
+                <th>Introduction</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td>{{ entity.title }}</td>
+                <td>{{ entity.rating }}</td>
+                <td>{{ entity.introduction }}</td>
+                <td>
+                    <a class="btn btn-primary" href="{{ path('campaign_show', { 'id': entity.id }) }}">show</a>
+                    {% if entity.isAuthor %}
+                        <a class="btn btn-primary" href="{{ path('campaign_edit', { 'id': entity.id }) }}">edit</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('campaign_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

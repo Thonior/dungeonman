@@ -1,0 +1,70 @@
+{% extends 'ThoniorMasterBundle::base.html.twig' %}
+
+{% block body -%}
+    <h1>Campaign edit</h1>
+
+    {{ form(edit_form) }}
+
+    <ul id="chapters-navbar" class="nav nav-tabs">
+        {% if entity.haschapters > 0%}
+            {% for chapter in entity.chapters%}
+            <li {% if loop.index == 1%} class="active" {% endif %}>
+                <a data-toggle="tab" data-chapter="{{chapter.id}}" class="chapter-tab" href="#" > Chapter {{ loop.index }}</a>
+            </li>
+            {% endfor %}
+        {% else %}    
+            <li class="active" ><a data-toggle="tab" class="chapter-tab new" href="#">Chapter 1</a></li>
+        {% endif %}
+        <li class="add" style="cursor:pointer;"><a>+</a></li>
+        
+    </ul>
+    <div id="editor"></div>
+    
+    <li>
+        <a href="{{ path('campaign') }}">
+            Back to the list
+        </a>
+    </li>
+    
+    <script>
+        $(document).ready(function(){
+            {% if entity.haschapters > 0%}
+                $('#editor').load("{{ path('chapter_edit', {'id' : entity.chapters[0].id}) }}");
+            {% else %}
+                $('#editor').load("{{ path('chapter_new', {'campaign' : entity.id}) }}");
+            {% endif %}
+            
+            $('.add').click(function(){
+                var chapters = $('#chapters-navbar .chapter-tab').length;
+                chapters = chapters +1;
+                $('.add').before('<li><a data-toggle="tab" class="chapter-tab new" href="#">Chapter '+chapters+'</a></li>');
+                $('.chapter-tab').click(function(){
+                   $('#editor').html('<img height="400px" src="{{asset('bundles/thoniormaster/images/loading.gif')}}"/>');
+                    if($(this).hasClass("new")){
+                        $('#editor').load("{{ path('chapter_new', {'campaign' : entity.id}) }}");
+                    }
+                    else{
+                        var id = $(this).data('chapter');
+                        $('#editor').load("{{ path('homepage')}}chapter/"+id+"/edit");
+                    }
+                });
+            });
+            
+            $('.chapter-tab').click(function(){
+                $('#editor').html('<img height="400px" src="{{asset('bundles/thoniormaster/images/loading.gif')}}"/>');
+                 if($(this).hasClass("new")){
+                     $('#editor').load("{{ path('chapter_new', {'campaign' : entity.id}) }}");
+                 }
+                 else{
+                     var id = $(this).data('chapter');
+                     $('#editor').load("{{ path('homepage')}}chapter/"+id+"/edit");
+                 }
+            });
+            
+            
+        });
+        
+        
+     </script>
+
+{% endblock %}

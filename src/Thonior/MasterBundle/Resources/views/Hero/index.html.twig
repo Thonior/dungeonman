@@ -1,0 +1,47 @@
+{% extends 'ThoniorMasterBundle::base.html.twig' %}
+
+{% block body -%}
+    <h1>Hero list</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Alignment</th>
+                <th>Level</th>
+                <th>Description</th>
+                <th>Media</th>
+                <th>Script</th>
+                <th>Health</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td>{{ entity.name }}</td>
+                <td>{{ entity.alignment }}</td>
+                <td>{{ entity.level }}</td>
+                <td>{{ entity.description }}</td>
+                <td>{{ entity.media }}</td>
+                <td>{{ entity.script }}</td>
+                <td>{{ entity.health }}</td>
+                <td>
+                    <a class="btn btn-primary" href="{{ path('hero_show', { 'id': entity.id }) }}">show</a>
+                    {% if entity.isAuthor %}
+                        <a class="btn btn-primary" href="{{ path('hero_edit', { 'id': entity.id }) }}">edit</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('hero_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

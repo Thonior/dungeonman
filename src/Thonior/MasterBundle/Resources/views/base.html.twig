@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}Welcome mascachapas!{% endblock %}</title>
+        {% block stylesheets %}
+	    {% stylesheets 
+                '@ThoniorMasterBundle/Resources/public/css/*' filter='cssrewrite'
+             %}
+                <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
+            {% endstylesheets %}
+	{% endblock %}
+        {% javascripts 
+                '@ThoniorMasterBundle/Resources/public/js/jquery-2.1.1.min.js'              
+                '@ThoniorMasterBundle/Resources/public/js/*'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        
+    </head>
+    <body>
+       <!--TOP NAVIGATION--> 
+       <div class="container">
+    {% block header %}
+        <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+		    <span class="icon-bar"></span>
+		    <span class="icon-bar"></span>
+		    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand">Dungeon Master</a>
+	     </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">	
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{currentUni}}<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        {% for universe in universes %}
+                            <li>
+                            {% if universe.name != currentUni %}
+                            <a href="{{ path('switchuni', {'universe': universe.name}) }}">
+                                {{ universe.name }}
+                            </a>
+                            {#{% else %}
+                                    <a href="#">
+                                        {{ universe.name }}
+                                    </a>#}
+                            {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                    </ul>
+                <ul class="nav navbar-nav navbar-right"> 
+                    {% if app.user %}
+                        <li><a href="{{ path('fos_user_security_logout') }}">Logout</a></li>
+                    {% else %}
+                        <li><a class="manager" data-path="{{ path('fos_user_security_login') }}" href="#login">Login</a></li>
+                        <li><a class="manager" data-path="{{ path('fos_user_registration_register') }}" href="#register">Register</a></li>
+                    {% endif %}
+                </ul>
+                <form method="post" action="{{path('search')}}" id="search" class="navbar-form navbar-left" role="search">
+                    <select name="environment" class="selectpicker">
+                        <option value="Race">Race</option>
+                        <option value="Job">Class</option>
+                        <option value="Hero">Hero</option>
+                        <optgroup label="Items">
+                          <option value="Item" >Miscellaneous</option>
+                          <option value="Weapon">Weapon</option>
+                          <option value="Armor">Armor</option>
+                        </optgroup>
+                    </select>
+                    
+                    <div class="form-group">
+                        <input name="search" type="text" class="form-control" placeholder="Search">
+                    </div>
+                    <input id="submit_search" type="submit" class="btn btn-default" value="Submit">
+                </form>
+            </div>
+
+        </div>
+    </nav> 
+    {% endblock %}
+    
+        <div class="row">
+    <!--LEFT MENU-->
+            {% block sidebar %}
+                 <div id="left-menu" class="col-md-2">
+                     <h2>MANAGER</h2>
+                    <ul class="nav nav-pills nav-stacked">
+                        <li><a href="{{path('universe')}}">Manage Universes</a></li>
+                        <li><a href="{{path('race')}}">Manage Races</a></li>
+                        <li><a href="{{path('job')}}">Manage Classes</a></li>
+                        <li><a href="{{path('hero')}}"> Manage Heroes</a></li>
+                        <li><a href="{{path('campaign')}}"> Manage Campaigns</a></li>
+                        <li><a href="{{path('item')}}"> Manage Items</a></li>
+                        {#<li>Manage Campaings</li>
+                        <li>Manage Items</li>#}
+                    </ul>
+                 </div>
+            {% endblock %}
+            <div class="col-md-10">
+                <div id="content">
+                    {% block body %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+    <script>
+        $(document).ready(function(){
+            $('#submit_search').click(function(){
+                $.post( "{{ path('search') }}", $('#search').serialize())
+                .done(function( data ) {
+                    $('#content').html(data);
+                });
+            });
+        });
+    </script>
+</html>

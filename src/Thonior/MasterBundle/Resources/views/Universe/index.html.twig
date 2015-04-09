@@ -1,0 +1,38 @@
+{% extends 'ThoniorMasterBundle::base.html.twig' %}
+
+{% block body -%}
+    
+    <h1>Universe list</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('universe_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.name }}</td>
+                <td>{{ entity.description }}</td>
+                <td>
+                    <a class="btn btn-primary manager" data-path="{{ path('universe_show', { 'id': entity.id }) }}"  href="#universe#{{entity.id}}">show</a>
+                    <a class="btn btn-primary manager" data-path="{{ path('universe_edit', { 'id': entity.id }) }}" href="#universe#{{entity.id}}#edit">edit</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a class="manager" data-path="{{ path('universe_new') }}" href="#universe_new">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

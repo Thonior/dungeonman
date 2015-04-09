@@ -1,0 +1,44 @@
+{% extends 'ThoniorMasterBundle::content.html.twig' %}
+
+{% block body -%}
+    <h1>Chapter creation</h1>
+
+    {{ form_start(form, {'attr':{'id' : 'form'} }) }}
+    {{form_errors(form)}}
+        {{form_row(form.title)}}
+        {{form_row(form.content, {'attr' : { 'class': 'tinymce'}})}}
+        <input type="hidden" name="campaign" value="{{campaign}}"/>
+        <a class="btn btn-primary submit_chapter">Save</a>
+    {{form_end(form)}}
+    <div style="display:none;" class="alert alert-success">Saved succesfully</div>
+    {{ tinymce_init() }}
+        
+<script>
+
+
+$(document).ready(function(){
+    
+
+    $('.submit_chapter').click(function(){
+        var content = tinyMCE.activeEditor.getContent();
+        $('#thonior_masterbundle_chapter_content').val(content);
+    
+        $.post( "{{ path('chapter_create') }}", $('#form').serialize())
+        .done(function( data ) {
+            $('.active').children().data('chapter',data);
+            $('.active').children().removeClass('new');
+            $('#editor').load("{{path('homepage')}}chapter/"+data+"/edit");
+            $('.alert-success').show().delay(5000).fadeOut();
+        });
+    });
+    
+    /*tinymce.remove();
+    tinymce.init({selector:'textarea'});*/
+    
+$('#thonior_masterbundle_chapter_submit').hide();
+$('#form_submit').hide();
+    
+});
+
+</script>
+{% endblock %}

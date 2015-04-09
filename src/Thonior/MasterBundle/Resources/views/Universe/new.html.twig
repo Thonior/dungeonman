@@ -1,0 +1,15 @@
+{% extends 'ThoniorMasterBundle::base.html.twig' %}
+
+{% block body -%}
+    <h1>Universe creation</h1>
+
+    {{ form(form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a class="manager" data-path="{{ path('universe') }}" href="#universe">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}

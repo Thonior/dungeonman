@@ -1,0 +1,53 @@
+{% extends 'ThoniorMasterBundle::base.html.twig' %}
+
+{% block body -%}
+    <h1>Item list</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Extra</th>
+                <th>Shopprice</th>
+                <th>Sellprice</th>
+                <th>Weight</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td>{{ entity.name }}</td>
+                <td>{{ entity.description }}</td>
+                <td>{{ entity.extra }}</td>
+                <td>{{ entity.shopPrice }}</td>
+                <td>{{ entity.sellPrice }}</td>
+                <td>{{ entity.weight }}</td>
+                <td>
+                        {% if entity.type == 'armor'%}
+                            <a class="btn btn-primary" href="{{ path('armor_show', { 'id': entity.id }) }}">show</a>              
+                            <a class="btn btn-primary" href="{{ path('armor_edit', { 'id': entity.id }) }}">edit</a>
+                        {% endif %}
+                        {% if entity.type == 'weapon'%}
+                            <a class="btn btn-primary" href="{{ path('weapon_show', { 'id': entity.id }) }}">show</a>              
+                            <a class="btn btn-primary" href="{{ path('weapon_edit', { 'id': entity.id }) }}">edit</a>
+                        {% endif %}
+                        {% if entity.type == 'item'%}
+                            <a class="btn btn-primary" href="{{ path('item_show', { 'id': entity.id }) }}">show</a>              
+                            <a class="btn btn-primary" href="{{ path('item_edit', { 'id': entity.id }) }}">edit</a>
+                        {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('item_creation') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

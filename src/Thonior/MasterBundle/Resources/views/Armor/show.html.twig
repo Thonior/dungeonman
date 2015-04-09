@@ -1,0 +1,69 @@
+{% extends 'ThoniorMasterBundle::base.html.twig' %}
+
+{% block body -%}
+    <h1>Armor</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ entity.name }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ entity.description }}</td>
+            </tr>
+            <tr>
+                <th>Extra</th>
+                <td>{{ entity.extra }}</td>
+            </tr>
+            <tr>
+                <th>Shopprice</th>
+                <td>{{ entity.shopPrice }}</td>
+            </tr>
+            <tr>
+                <th>Sellprice</th>
+                <td>{{ entity.sellPrice }}</td>
+            </tr>
+            <tr>
+                <th>Weight</th>
+                <td>{{ entity.weight }}</td>
+            </tr>
+            <tr>
+                <th>Ca</th>
+                <td>{{ entity.CA }}</td>
+            </tr>
+            <tr>
+                <th>Penalty</th>
+                <td>{{ entity.penalty }}</td>
+            </tr>
+            <tr>
+                <th>Position</th>
+                <td>{{ entity.position }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('armor') }}">
+            Back to the list of armors
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('item') }}">
+            Back to the list of items
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('armor_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

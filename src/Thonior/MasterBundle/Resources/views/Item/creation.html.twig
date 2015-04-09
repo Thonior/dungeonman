@@ -1,0 +1,26 @@
+{% extends 'ThoniorMasterBundle::base.html.twig' %}
+
+{% block body -%}
+    <h1>Item creation</h1>
+
+    <ul id="item-navbar" class="nav nav-tabs">
+        <li><a id="new-armor" data-toggle="tab" >Armor</a></li>
+        <li><a id="new-weapon" data-toggle="tab" >Weapon</a></li>
+        <li><a id="new-item" data-toggle="tab" >Miscellaneous</a></li>
+    </ul>
+    <div id="form-area"></div>
+    <script>
+    $(document).ready(function(){
+        $('#new-armor').click(function(){
+            $('#form-area').load("{{path('armor_new')}}");
+        });
+        $('#new-weapon').click(function(){
+            $('#form-area').load("{{path('weapon_new')}}");
+        });
+        $('#new-item').click(function(){
+            $('#form-area').load("{{path('item_new')}}");
+        });
+    });
+       
+    </script>
+{% endblock %}

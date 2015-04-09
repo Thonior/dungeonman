@@ -1,0 +1,51 @@
+{% extends 'ThoniorMasterBundle::base.html.twig' %}
+
+{% block body -%}
+    <h1>Armor list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Extra</th>
+                <th>Shopprice</th>
+                <th>Sellprice</th>
+                <th>Weight</th>
+                <th>Ca</th>
+                <th>Penalty</th>
+                <th>Position</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('armor_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.name }}</td>
+                <td>{{ entity.description }}</td>
+                <td>{{ entity.extra }}</td>
+                <td>{{ entity.shopPrice }}</td>
+                <td>{{ entity.sellPrice }}</td>
+                <td>{{ entity.weight }}</td>
+                <td>{{ entity.CA }}</td>
+                <td>{{ entity.penalty }}</td>
+                <td>{{ entity.position }}</td>
+                <td>
+                        <a class="btn btn-primary" href="{{ path('armor_show', { 'id': entity.id }) }}">show</a>
+                        <a class="btn btn-primary" href="{{ path('armor_edit', { 'id': entity.id }) }}">edit</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('item_creation') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

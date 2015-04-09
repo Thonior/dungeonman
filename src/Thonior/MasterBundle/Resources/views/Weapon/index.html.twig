@@ -1,0 +1,63 @@
+{% extends 'ThoniorMasterBundle::base.html.twig' %}
+
+{% block body -%}
+    <h1>Weapon list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Extra</th>
+                <th>Shopprice</th>
+                <th>Sellprice</th>
+                <th>Weight</th>
+                <th>Damage</th>
+                <th>Damagetype</th>
+                <th>Critchance</th>
+                <th>Critbonus</th>
+                <th>Bonus</th>
+                <th>Bonustype</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('weapon_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.name }}</td>
+                <td>{{ entity.description }}</td>
+                <td>{{ entity.extra }}</td>
+                <td>{{ entity.shopPrice }}</td>
+                <td>{{ entity.sellPrice }}</td>
+                <td>{{ entity.weight }}</td>
+                <td>{{ entity.damage }}</td>
+                <td>{{ entity.damageType }}</td>
+                <td>{{ entity.critChance }}</td>
+                <td>{{ entity.critBonus }}</td>
+                <td>{{ entity.bonus }}</td>
+                <td>{{ entity.bonusType }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('weapon_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('weapon_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('item_creation') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'ThoniorMasterBundle::base.html.twig' %}
+
+{% block body -%}
+    <h1>Item edit</h1>
+
+    {{ form_start(edit_form, {'attr':{'id' : 'form'} }) }}
+    {{ form_errors(edit_form) }}
+    {{ form_end(edit_form) }}
+        <ul class="record_actions">
+    <li>
+        <a href="{{path('item')}}">
+            Back to the list
+        </a>
+    </li>
+    <!--<li>{{ form(delete_form) }}</li>-->
+</ul>
+{% endblock %}

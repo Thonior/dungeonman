@@ -1,0 +1,305 @@
+<?php
+
+namespace Thonior\MasterBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Hero
+ *
+ * @ORM\Table()
+ * @ORM\Entity
+ */
+class Hero
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="race", type="string", length=255)
+     */
+    private $race;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="alignment", type="string", length=255)
+     */
+    private $alignment;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="classes", type="string", length=255)
+     */
+    private $classes;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="level", type="string", length=255)
+     */
+    private $level;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="string", length=255)
+     */
+    private $description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="media", type="string", length=255)
+     */
+    private $media;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="script", type="string", length=255)
+     */
+    private $script;
+
+    /**
+     *
+     * @ORM\ManyToMany(targetEntity="Item")
+     * @ORM\JoinTable(name="hero_items",
+     *	    joinColumns={@ORM\JoinColumn(name="hero_id", referencedColumnName="id")},
+     *	    inverseJoinColumns={@ORM\JoinColumn(name="item_id", referencedColumnName="id")}
+     *	    )
+     */
+    private $inventory;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="campaigns")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $author;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="Campaign", mappedBy="heroes")
+     */
+    private $campaigns;
+    
+    /**
+     * @ORM\Column(name="health", type="integer")
+     */
+    private $health;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Universe", inversedBy="heroes")
+     * @ORM\JoinColumn(name="universe_id", referencedColumnName="id")
+     */
+    private $universe;
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return Hero
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set race
+     *
+     * @param string $race
+     * @return Hero
+     */
+    public function setRace($race)
+    {
+        $this->race = $race;
+
+        return $this;
+    }
+
+    /**
+     * Get race
+     *
+     * @return string 
+     */
+    public function getRace()
+    {
+        return $this->race;
+    }
+
+    /**
+     * Set alignment
+     *
+     * @param string $alignment
+     * @return Hero
+     */
+    public function setAlignment($alignment)
+    {
+        $this->alignment = $alignment;
+
+        return $this;
+    }
+
+    /**
+     * Get alignment
+     *
+     * @return string 
+     */
+    public function getAlignment()
+    {
+        return $this->alignment;
+    }
+
+    /**
+     * Set classes
+     *
+     * @param string $classes
+     * @return Hero
+     */
+    public function setClasses($classes)
+    {
+        $this->classes = $classes;
+
+        return $this;
+    }
+
+    /**
+     * Get classes
+     *
+     * @return string 
+     */
+    public function getClasses()
+    {
+        return $this->classes;
+    }
+
+    /**
+     * Set level
+     *
+     * @param string $level
+     * @return Hero
+     */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+
+        return $this;
+    }
+
+    /**
+     * Get level
+     *
+     * @return string 
+     */
+    public function getLevel()
+    {
+        return $this->level;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return Hero
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set media
+     *
+     * @param string $media
+     * @return Hero
+     */
+    public function setMedia($media)
+    {
+        $this->media = $media;
+
+        return $this;
+    }
+
+    /**
+     * Get media
+     *
+     * @return string 
+     */
+    public function getMedia()
+    {
+        return $this->media;
+    }
+
+    /**
+     * Set script
+     *
+     * @param string $script
+     * @return Hero
+     */
+    public function setScript($script)
+    {
+        $this->script = $script;
+
+        return $this;
+    }
+
+    /**
+     * Get script
+     *
+     * @return string 
+     */
+    public function getScript()
+    {
+        return $this->script;
+    }
+}

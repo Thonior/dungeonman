@@ -1,0 +1,17 @@
+{% extends 'ThoniorMasterBundle::base.html.twig' %}
+
+{% block body -%}
+    <h1>Job creation</h1>
+
+    {{ form_start(form, {'attr': {'id': 'form'}}) }}
+    {{ form_errors(form) }}
+    {{ form_end(form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a  href="{{path('job')}}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}

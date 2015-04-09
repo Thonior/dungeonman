@@ -1,0 +1,18 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Weapon creation</h1>
+
+    {{ form_start(form, {'attr': {'id': 'form'}}) }}
+    {{ form_errors(form) }}
+    {{ form_end(form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{path('item')}}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+    
+{% endblock %}

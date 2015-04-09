@@ -1,0 +1,16 @@
+{% extends 'ThoniorMasterBundle::base.html.twig' %}
+
+{% block body -%}
+    <h1>Hero creation</h1>
+
+    {{ form_start(form, {'attr': {'id': 'form'}}) }}
+    {{ form_errors(form) }}
+    {{ form_end(form) }}
+        <ul class="record_actions">
+    <li>
+        <a class="manager" data-path="{{ path('hero') }}" href="#hero">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}

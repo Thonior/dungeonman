@@ -1,0 +1,11 @@
+{% extends 'ThoniorMasterBundle::base.html.twig' %}
+
+{% block body -%}
+<table class="table">
+    {% for entity in result %}
+        <tr>
+            {{entity.name}}
+        </tr>
+    {% endfor %}
+</table>
+{% endblock %}

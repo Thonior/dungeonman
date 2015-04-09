@@ -1,0 +1,52 @@
+{% extends 'ThoniorMasterBundle::base.html.twig' %}
+
+{% block body -%}
+    <h1>Hero</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <td>{{ entity.name }}</td>
+            </tr>
+            <tr>
+                <th>Alignment</th>
+                <td>{{ entity.alignment }}</td>
+            </tr>
+            <tr>
+                <th>Level</th>
+                <td>{{ entity.level }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ entity.description }}</td>
+            </tr>
+            <tr>
+                <th>Media</th>
+                <td>{{ entity.media }}</td>
+            </tr>
+            <tr>
+                <th>Script</th>
+                <td>{{ entity.script }}</td>
+            </tr>
+            <tr>
+                <th>Health</th>
+                <td>{{ entity.health }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('hero') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('hero_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'ThoniorMasterBundle::content.html.twig' %}
+
+{% block body -%}
+    <h1>Chapter edit</h1>
+
+    {{ form_start(edit_form, {'attr':{'id' : 'form'} }) }}
+    {{form_errors(edit_form)}}
+        {{form_row(edit_form.title)}}
+        {{form_row(edit_form.content, {'attr' : { 'class': 'tinymce'}})}}
+        <input type="hidden" name="campaign" value="{{entity.campaign}}"/>
+        <a class="btn btn-primary submit_chapter" >Save</a>
+    {{form_end(edit_form)}}
+    <div style="display:none;" class="alert alert-success">Saved succesfully</div>
+
+
+    {{ tinymce_init() }}
+    <script>
+        $(document).ready(function(){
+            $('.submit_chapter').click(function(){
+                var content = tinyMCE.activeEditor.getContent();
+                $('#thonior_masterbundle_chapter_content').val(content);
+
+                $.post( "{{ path('chapter_update', {'id' : entity.id }) }}", $('#form').serialize())
+                .done(function( data ) {
+                    $('.alert-success').show().delay(5000).fadeOut();
+                });
+            });
+        });
+        
+        $('#thonior_masterbundle_chapter_submit').hide();
+    </script>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'ThoniorMasterBundle::base.html.twig' %}
+
+{% block body -%}
+    <h1>Campaign</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Title</th>
+                <td>{{ entity.title }}</td>
+            </tr>
+            <tr>
+                <th>Rating</th>
+                <td>{{ entity.rating }}</td>
+            </tr>
+            <tr>
+                <th>Introduction</th>
+                <td>{{ entity.introduction }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a class="manager" data-path="{{ path('campaign') }}" href="#campaign">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('campaign_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

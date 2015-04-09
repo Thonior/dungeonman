@@ -1,0 +1,20 @@
+{% extends 'ThoniorMasterBundle::base.html.twig' %}
+
+{% block body -%}
+    <h1>Campaign creation</h1>
+
+    {{ form_start(form, {'attr':{'id' : 'form'} }) }}
+        {{form_errors(form)}}
+    
+        {{form_row(form.title)}}
+        {{form_row(form.introduction)}}
+    {{form_end(form)}}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('campaign') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}
