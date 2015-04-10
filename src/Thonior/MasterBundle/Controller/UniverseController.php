@@ -31,7 +31,7 @@ class UniverseController extends myController
 
         $universes = $em->getRepository('ThoniorMasterBundle:Universe')->findAll();        
         
-        $vars = array( 'entites' => $universes);
+        $vars = array( 'entities' => $universes);
         
         return $this->template($request, $vars);
         

@@ -9,11 +9,14 @@
                 '@ThoniorMasterBundle/Resources/public/css/*' filter='cssrewrite'
              %}
                 <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
+                <link rel="stylesheet" type="text/css" href="{{ asset('bundles/starrating/css/rating.css') }}" />
+                <link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />
             {% endstylesheets %}
 	{% endblock %}
         {% javascripts 
                 '@ThoniorMasterBundle/Resources/public/js/jquery-2.1.1.min.js'              
                 '@ThoniorMasterBundle/Resources/public/js/*'
+                '@StarRatingBundle/Resources/public/js/rating.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
@@ -61,8 +64,8 @@
                     {% if app.user %}
                         <li><a href="{{ path('fos_user_security_logout') }}">Logout</a></li>
                     {% else %}
-                        <li><a class="manager" data-path="{{ path('fos_user_security_login') }}" href="#login">Login</a></li>
-                        <li><a class="manager" data-path="{{ path('fos_user_registration_register') }}" href="#register">Register</a></li>
+                        <li><a href="{{ path('fos_user_security_login') }}">Login</a></li>
+                        <li><a href="{{ path('fos_user_registration_register') }}">Register</a></li>
                     {% endif %}
                 </ul>
                 <form method="post" action="{{path('search')}}" id="search" class="navbar-form navbar-left" role="search">

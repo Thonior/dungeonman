@@ -1,0 +1,8 @@
+{% extends 'ThoniorMasterBundle::base.html.twig' %}
+
+{% block body %}
+    <h1>Registration</h1>
+{% block fos_user_content %}
+{% include "FOSUserBundle:Registration:register_content.html.twig" %}
+{% endblock fos_user_content %}
+{% endblock %}

@@ -22,7 +22,9 @@
 	"friendsofsymfony/user-bundle": "~2.0@dev",
 	"doctrine/doctrine-fixtures-bundle": "2.2.*",
         "jms/security-extra-bundle": "1.5.1",
-        "stfalcon/tinymce-bundle": "dev-master"
+        "stfalcon/tinymce-bundle": "dev-master",
+        "blackknight467/star-rating-bundle": "1.*",
+        "bmatzner/fontawesome-bundle": "~4.3"
     },
     "scripts": {
         "post-install-cmd": [

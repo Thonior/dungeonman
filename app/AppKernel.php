@@ -19,11 +19,14 @@ class AppKernel extends Kernel
             //new Thonior\DungeonBundle\ThoniorDungeonBundle(),
 	    new FOS\UserBundle\FOSUserBundle(),
             new Thonior\MasterBundle\ThoniorMasterBundle(),
+            new Thonior\UserBundle\ThoniorUserBundle(),
             new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
             new JMS\AopBundle\JMSAopBundle(),
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new JMS\DiExtraBundle\JMSDiExtraBundle($this),
             new Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle(),
+            new blackknight467\StarRatingBundle\StarRatingBundle(),
+            new Bmatzner\FontAwesomeBundle\BmatznerFontAwesomeBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
