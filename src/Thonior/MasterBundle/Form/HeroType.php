@@ -22,6 +22,7 @@ class HeroType extends AbstractType
             ->add('media')
             ->add('script')
             ->add('health')
+            ->add('tags', 'text');
         ;
     }
     

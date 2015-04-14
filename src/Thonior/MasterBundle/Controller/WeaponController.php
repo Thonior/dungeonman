@@ -62,8 +62,12 @@ class WeaponController extends myController
             $entity->setAuthor($user);
             $entity->setUniverse($universe);
             
+            $tagman = $this->tag($form['tags']->getData(),$entity);
+            
             $em->persist($entity);
             $em->flush();
+            
+            $tagman->saveTagging($entity);
 
             return $this->redirect($this->generateUrl('weapon_show', array('id' => $entity->getId())));
         }
@@ -108,7 +112,7 @@ class WeaponController extends myController
 
         return array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'edit_form'   => $form->createView(),
         );
     }
 
@@ -129,6 +133,8 @@ class WeaponController extends myController
             throw $this->createNotFoundException('Unable to find Weapon entity.');
         }
 
+        $entity = $this->getTags($entity);
+        
         $deleteForm = $this->createDeleteForm($id);
 
         $vars = array(
@@ -157,6 +163,8 @@ class WeaponController extends myController
             throw $this->createNotFoundException('Unable to find Weapon entity.');
         }
 
+        $entity = $this->getSerializedTags($entity);
+        
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
 
@@ -210,7 +218,12 @@ class WeaponController extends myController
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+            $tagman = $this->tag($editForm['tags']->getData(),$entity);
+            
+            $em->persist($entity);
             $em->flush();
+            
+            $tagman->saveTagging($entity);
 
             return $this->redirect($this->generateUrl('weapon_edit', array('id' => $id)));
         }

@@ -20,9 +20,10 @@ class ArmorType extends AbstractType
             ->add('shopPrice')
             ->add('sellPrice')
             ->add('weight')
-            ->add('CA')
+            ->add('CA','integer', array('label'=>'Armor class'))
             ->add('penalty')
             ->add('position')
+            ->add('tags','text')
         ;
     }
     

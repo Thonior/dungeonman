@@ -3,6 +3,8 @@
 namespace Thonior\MasterBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use DoctrineExtensions\Taggable\Taggable;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Hero
@@ -10,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity
  */
-class Hero
+class Hero implements Taggable
 {
     /**
      * @var integer
@@ -55,7 +57,7 @@ class Hero
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="string", length=255)
+     * @ORM\Column(name="description", type="text")
      */
     private $description;
 
@@ -69,7 +71,7 @@ class Hero
     /**
      * @var string
      *
-     * @ORM\Column(name="script", type="string", length=255)
+     * @ORM\Column(name="script", type="text")
      */
     private $script;
 
@@ -104,6 +106,29 @@ class Hero
      * @ORM\JoinColumn(name="universe_id", referencedColumnName="id")
      */
     private $universe;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="rating", type="integer")
+     */
+    private $rating = 0;
+    
+     /**
+     * @var integer
+     *
+     * @ORM\Column(name="rates", type="integer")
+     */
+    private $rates = 0;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="total_rate", type="integer")
+     */
+    private $totalRate = 0;
+    
+    private $tags;
 
     /**
      * Get id
@@ -431,6 +456,88 @@ class Hero
 
         return $this;
     }
+    
+    /**
+     * Set rating
+     *
+     * @param integer $rating
+     * @return Campaign
+     */
+    public function setRating($rating)
+    {
+        $this->rating = $rating;
+
+        return $this;
+    }
+
+    /**
+     * Get rating
+     *
+     * @return integer 
+     */
+    public function getRating()
+    {
+        return $this->rating;
+    }
+    
+    
+    /**
+     * Set rates
+     *
+     * @param integer $rates
+     * @return Campaign
+     */
+    public function setRates($rates)
+    {
+        $this->rates = $rates;
+
+        return $this;
+    }
+    
+    public function addRate(){
+        $this->rates = $this->rates+1;
+        
+        return $this;
+    }
+
+    /**
+     * Get rates
+     *
+     * @return integer 
+     */
+    public function getRates()
+    {
+        return $this->rates;
+    }
+    
+    /**
+     * Set rates
+     *
+     * @param integer $rates
+     * @return Campaign
+     */
+    public function setTotalRate($rate)
+    {
+        $this->totalRate = $rate;
+
+        return $this;
+    }
+    
+    public function addTotalRate($rate){
+        $this->totalRate = $this->totalRate + $rate;
+        
+        return $this;
+    }
+
+    /**
+     * Get rates
+     *
+     * @return integer 
+     */
+    public function getTotalRate()
+    {
+        return $this->totalRate;
+    }
 
     /**
      * Get universe
@@ -453,6 +560,30 @@ class Hero
     public function setIsAuthor($isAuthor){
         $this->isAuthor = $isAuthor;
         return $this;
+    }
+    
+     public function setTags($tags)
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
+    
+    public function getTags()
+    {
+        $this->tags = $this->tags ?: new ArrayCollection();
+
+        return $this->tags;
+    }
+
+    public function getTaggableType()
+    {
+        return 'hero';
+    }
+
+    public function getTaggableId()
+    {
+        return $this->getId();
     }
     
 }

@@ -20,7 +20,7 @@ class ItemType extends AbstractType
             ->add('shopPrice')
             ->add('sellPrice')
             ->add('weight')
-        ;
+            ->add('tags', 'text');
     }
     
     /**

@@ -13,6 +13,7 @@
                 <th>Sellprice</th>
                 <th>Weight</th>
                 <th>Actions</th>
+                <th>Rating</th>
             </tr>
         </thead>
         <tbody>
@@ -38,16 +39,15 @@
                             <a class="btn btn-primary" href="{{ path('item_edit', { 'id': entity.id }) }}">edit</a>
                         {% endif %}
                 </td>
+                <td>{{ entity.rating|rating }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-        <ul>
-        <li>
+        
             <a href="{{ path('item_creation') }}">
                 Create a new entry
             </a>
-        </li>
-    </ul>
+       
     {% endblock %}

@@ -3,12 +3,15 @@
 namespace Thonior\MasterBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Thonior\MasterBundle\Entity\Item;
 use Thonior\MasterBundle\Form\ItemType;
+use Thonior\MasterBundle\Form\RateItemType;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -78,9 +81,13 @@ class ItemController extends myController
             $entity->setAuthor($user);
             $entity->setUniverse($universe);
             
+            $tagman = $this->tag($form['tags']->getData(),$entity);
+            
             $em->persist($entity);
             $em->flush();
 
+            $tagman->saveTagging($entity);
+            
             return $this->redirect($this->generateUrl('item_show', array('id' => $entity->getId())));
         }
 
@@ -123,7 +130,7 @@ class ItemController extends myController
          
         $vars = array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'edit_form'   => $form->createView(),
         );
         
         return $this->template($request, $vars);
@@ -150,21 +157,24 @@ class ItemController extends myController
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('ThoniorMasterBundle:Item')->find($id);
-
+        
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Item entity.');
         }
-
+        
+        $entity = $this->getTags($entity);
+        
+        $rateForm = $this->createRateForm($entity);
         $deleteForm = $this->createDeleteForm($id);
 
         $vars = array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
+            'rate_form' => $rateForm->createView(),
         );
         
         return $this->template($request, $vars);
     }
-
     /**
      * Displays a form to edit an existing Item entity.
      *
@@ -181,6 +191,8 @@ class ItemController extends myController
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Item entity.');
         }
+        
+        $entity = $this->getSerializedTags($entity);
 
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
@@ -224,7 +236,7 @@ class ItemController extends myController
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('ThoniorMasterBundle:Item')->find($id);
-
+            
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Item entity.');
         }
@@ -234,7 +246,12 @@ class ItemController extends myController
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+            $tagman = $this->tag($editForm['tags']->getData(),$entity);
+            
+            $em->persist($entity);
             $em->flush();
+            
+            $tagman->saveTagging($entity);
 
             return $this->redirect($this->generateUrl('item_edit', array('id' => $id)));
         }
@@ -287,4 +304,70 @@ class ItemController extends myController
             ->getForm()
         ;
     }
+    
+    /**
+     * Adds a rate to a item entity
+     *
+     * @Route("/rate", name="item_rate")
+     * @Method("POST")
+     */
+    public function rateAction(Request $request){
+        
+        $em = $this->getDoctrine()->getManager();
+        $id = $request->request->get('id');
+        $entity = $em->getRepository('ThoniorMasterBundle:Item')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Item entity.');
+        }
+        $rateForm = $this->createRateForm($entity);
+        $cookies = $request->cookies;
+        if($cookies->has('voted_item_'.$id)){
+            $stars = $request->request->get('stars');
+            
+            $entity->setTotalRate($entity->getTotalRate() - $cookies->get('voted_item_'.$id));
+            $entity->addTotalRate($stars);
+            $rating = $entity->getTotalRate() / $entity->getRates(); 
+            $entity->setRating($rating);
+            
+            $em->persist($entity);
+            $em->flush();
+            
+            $response = new Response();
+            $response->setContent('ok');
+        }
+        else{
+            $stars = $request->request->get('stars');
+            $entity->addRate();
+            $entity->addTotalRate($stars);
+            $rating = $entity->getTotalRate() / $entity->getRates(); 
+            $entity->setRating($rating);
+            
+            $em->persist($entity);
+            $em->flush();
+            
+            $response = new Response();
+            $response->setContent('ok');
+        }
+        return $response;
+        
+    }
+    
+    /**
+    * Creates a form to rate a Item entity.
+    *
+    * @param Item $entity The entity
+    *
+    * @return \Symfony\Component\Form\Form The form
+    */
+    private function createRateForm(Item $entity)
+    {
+        $form = $this->createForm(new RateItemType(), $entity, array(
+            'action' => $this->generateUrl('item_rate'),
+            'method' => 'PUT',
+        ));
+
+        return $form;
+    }
+    
 }

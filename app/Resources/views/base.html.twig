@@ -8,6 +8,10 @@
     </head>
     <body>
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        {% javascripts 
+            '@ThoniorMasterBundle/Resources/public/js/bootstrap-tagsinput.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
     </body>
 </html>

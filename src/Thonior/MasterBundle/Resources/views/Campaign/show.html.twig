@@ -2,7 +2,12 @@
 
 {% block body -%}
     <h1>Campaign</h1>
-
+    <div id="votes">
+        {{ form_start(rate_form, {'attr':{'id' : 'rateform'} }) }}
+        {{ form_errors(rate_form) }}
+        {{ form_end(rate_form) }}
+    </div>
+    (based on {{entity.rates}} votes)
     <table class="record_properties">
         <tbody>
             <tr>
@@ -33,4 +38,15 @@
     </li>
     <li>{{ form(delete_form) }}</li>
 </ul>
+<script>
+    $(document).ready(function(){
+        $('.rating-well div').click(function(){
+            var value = $(this).data('value');
+            $.post("{{path('campaign_rate')}}", {'id': "{{entity.id}}",'stars':value})
+                    .done(function(data){
+                        setCookie('voted_campaign_{{entity.id}}',value,1000);
+                    });
+        });
+    });
+</script>
 {% endblock %}

@@ -95,4 +95,9 @@ jms_security_extra:
     # Allows you to specify access control rules for specific methods, such
     # as controller actions
     method_access_control: { }
+    
+fpn_tag:
+    model:
+        tag_class:     Thonior\MasterBundle\Entity\Tag
+        tagging_class: Thonior\MasterBundle\Entity\Tagging
 

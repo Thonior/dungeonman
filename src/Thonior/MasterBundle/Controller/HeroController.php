@@ -3,12 +3,14 @@
 namespace Thonior\MasterBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Thonior\MasterBundle\Entity\Hero;
 use Thonior\MasterBundle\Form\HeroType;
+use Thonior\MasterBundle\Form\RateHeroType;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -70,8 +72,12 @@ class HeroController extends myController
 	    $entity->setUniverse($universe);
             $entity->setAuthor($user);
             
+            $tagman = $this->tag($form['tags']->getData(),$entity);
+            
             $em->persist($entity);
             $em->flush();
+            
+            $tagman->saveTagging($entity);
 
             return $this->redirect($this->generateUrl('hero_show', array('id' => $entity->getId())));
         }
@@ -115,7 +121,7 @@ class HeroController extends myController
         $form   = $this->createCreateForm($entity);
         $vars = array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'edit_form'   => $form->createView(),
         );
         
         return $this->template($request, $vars);
@@ -138,11 +144,15 @@ class HeroController extends myController
             throw $this->createNotFoundException('Unable to find Hero entity.');
         }
 
+        $entity = $this->getTags($entity);
+        
+        $rateForm = $this->createRateForm($entity);
         $deleteForm = $this->createDeleteForm($id);
 
         $vars = array(
             'entity' => $entity,
-            'delete_form' => $deleteForm->createView()
+            'delete_form' => $deleteForm->createView(),
+            'rate_form' => $rateForm->createView(),
         );
         
         return $this->template($request,$vars);
@@ -170,6 +180,8 @@ class HeroController extends myController
             return $this->redirect($this->generateUrl('nopermission'));
         }
 
+        $entity = $this->getSerializedTags($entity);
+        
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
         
@@ -227,7 +239,12 @@ class HeroController extends myController
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+            $tagman = $this->tag($editForm['tags']->getData(),$entity);
+            
+            $em->persist($entity);
             $em->flush();
+            
+            $tagman->saveTagging($entity);
 
             return $this->redirect($this->generateUrl('hero_edit', array('id' => $id)));
         }
@@ -285,4 +302,71 @@ class HeroController extends myController
             ->getForm()
         ;
     }
+    
+    
+    /**
+     * Adds a rate to a item entity
+     *
+     * @Route("/rate", name="hero_rate")
+     * @Method("POST")
+     */
+    public function rateAction(Request $request){
+        
+        $em = $this->getDoctrine()->getManager();
+        $id = $request->request->get('id');
+        $entity = $em->getRepository('ThoniorMasterBundle:Hero')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Hero entity.');
+        }
+        $rateForm = $this->createRateForm($entity);
+        $cookies = $request->cookies;
+        if($cookies->has('voted_hero_'.$id)){
+            $stars = $request->request->get('stars');
+            
+            $entity->setTotalRate($entity->getTotalRate() - $cookies->get('voted_hero_'.$id));
+            $entity->addTotalRate($stars);
+            $rating = $entity->getTotalRate() / $entity->getRates(); 
+            $entity->setRating($rating);
+            
+            $em->persist($entity);
+            $em->flush();
+            
+            $response = new Response();
+            $response->setContent('ok');
+        }
+        else{
+            $stars = $request->request->get('stars');
+            $entity->addRate();
+            $entity->addTotalRate($stars);
+            $rating = $entity->getTotalRate() / $entity->getRates(); 
+            $entity->setRating($rating);
+            
+            $em->persist($entity);
+            $em->flush();
+            
+            $response = new Response();
+            $response->setContent('ok');
+        }
+        return $response;
+        
+    }
+    
+    /**
+    * Creates a form to rate a Item entity.
+    *
+    * @param Item $entity The entity
+    *
+    * @return \Symfony\Component\Form\Form The form
+    */
+    private function createRateForm(Hero $entity)
+    {
+        $form = $this->createForm(new RateHeroType(), $entity, array(
+            'action' => $this->generateUrl('hero_rate'),
+            'method' => 'PUT',
+        ));
+
+        return $form;
+    }
 }
+

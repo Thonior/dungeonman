@@ -3,12 +3,14 @@
 namespace Thonior\MasterBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Thonior\MasterBundle\Entity\Campaign;
 use Thonior\MasterBundle\Form\CampaignType;
+use Thonior\MasterBundle\Form\RateCampaignType;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -45,6 +47,7 @@ class CampaignController extends myController
         
         return $this->template($request,$vars);
     }
+    
     /**
      * Creates a new Campaign entity.
      *
@@ -71,8 +74,12 @@ class CampaignController extends myController
             $entity->setRating(0);
             $entity->setUniverse($universe);
             
+            $tagman = $this->tag($form['tags']->getData(),$entity);
+            
             $em->persist($entity);
             $em->flush();
+            
+            $tagman->saveTagging($entity);
 
             return $this->redirect($this->generateUrl('campaign_edit', array('id' => $entity->getId())));
         }
@@ -117,7 +124,7 @@ class CampaignController extends myController
         
         $vars = array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'edit_form'   => $form->createView(),
         );
         
         return $this->template($request, $vars);
@@ -139,12 +146,19 @@ class CampaignController extends myController
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Campaign entity.');
         }
+        
+        $tagman = $this->getTagman();
+        $tagman->loadTagging($entity);
+        $tags = $tagman->getTagNames($entity);
+        $entity->setTags($tags);
 
+        $rateForm = $this->createRateForm($entity);
         $deleteForm = $this->createDeleteForm($id);
 
         $vars = array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
+            'rate_form'   => $rateForm->createView(), 
         );
         
         return $this->template($request, $vars);
@@ -167,6 +181,12 @@ class CampaignController extends myController
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Campaign entity.');
         }
+        
+        $tagman = $this->getTagman();
+        $tagman->loadTagging($entity);
+        $tags = $tagman->getTagNames($entity);
+        $tags = $this->serializeTags($tags);
+        $entity->setTags($tags);
 
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
@@ -221,7 +241,13 @@ class CampaignController extends myController
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+            
+            $tagman = $this->tag($editForm['tags']->getData(),$entity);
+            
+            $em->persist($entity);
             $em->flush();
+            
+            $tagman->saveTagging($entity);
 
             return $this->redirect($this->generateUrl('campaign_edit', array('id' => $id)));
         }
@@ -274,5 +300,70 @@ class CampaignController extends myController
             ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()
         ;
+    }
+    
+    /**
+     * Adds a rate to a item entity
+     *
+     * @Route("/rate", name="campaign_rate")
+     * @Method("POST")
+     */
+    public function rateAction(Request $request){
+        
+        $em = $this->getDoctrine()->getManager();
+        $id = $request->request->get('id');
+        $entity = $em->getRepository('ThoniorMasterBundle:Campaign')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Campaign entity.');
+        }
+        $rateForm = $this->createRateForm($entity);
+        $cookies = $request->cookies;
+        if($cookies->has('voted_campaign_'.$id)){
+            $stars = $request->request->get('stars');
+            
+            $entity->setTotalRate($entity->getTotalRate() - $cookies->get('voted_campaign_'.$id));
+            $entity->addTotalRate($stars);
+            $rating = $entity->getTotalRate() / $entity->getRates(); 
+            $entity->setRating($rating);
+            
+            $em->persist($entity);
+            $em->flush();
+            
+            $response = new Response();
+            $response->setContent('ok');
+        }
+        else{
+            $stars = $request->request->get('stars');
+            $entity->addRate();
+            $entity->addTotalRate($stars);
+            $rating = $entity->getTotalRate() / $entity->getRates(); 
+            $entity->setRating($rating);
+            
+            $em->persist($entity);
+            $em->flush();
+            
+            $response = new Response();
+            $response->setContent('ok');
+        }
+        return $response;
+        
+    }
+    
+    /**
+    * Creates a form to rate a Item entity.
+    *
+    * @param Item $entity The entity
+    *
+    * @return \Symfony\Component\Form\Form The form
+    */
+    private function createRateForm(Campaign $entity)
+    {
+        $form = $this->createForm(new RateCampaignType(), $entity, array(
+            'action' => $this->generateUrl('campaign_rate'),
+            'method' => 'PUT',
+        ));
+
+        return $form;
     }
 }

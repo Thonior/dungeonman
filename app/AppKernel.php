@@ -27,6 +27,7 @@ class AppKernel extends Kernel
             new Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle(),
             new blackknight467\StarRatingBundle\StarRatingBundle(),
             new Bmatzner\FontAwesomeBundle\BmatznerFontAwesomeBundle(),
+            new FPN\TagBundle\FPNTagBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

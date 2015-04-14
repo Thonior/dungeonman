@@ -3,6 +3,8 @@
 namespace Thonior\MasterBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use DoctrineExtensions\Taggable\Taggable;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Campaign
@@ -10,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity
  */
-class Campaign
+class Campaign implements Taggable
 {
     /**
      * @var integer
@@ -38,7 +40,21 @@ class Campaign
      *
      * @ORM\Column(name="rating", type="integer")
      */
-    private $rating;
+    private $rating = 0;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="rates", type="integer")
+     */
+    private $rates = 0;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="total_rate", type="integer")
+     */
+    private $totalRate = 0;
 
     /**
      * @var string
@@ -64,8 +80,9 @@ class Campaign
      * @ORM\JoinColumn(name="universe_id", referencedColumnName="id")
      */
     private $universe;
-    
 
+    
+    private $tags;
 
     /**
      * Get id
@@ -149,6 +166,64 @@ class Campaign
     public function getRating()
     {
         return $this->rating;
+    }
+    
+    /**
+     * Set rates
+     *
+     * @param integer $rates
+     * @return Campaign
+     */
+    public function setRates($rates)
+    {
+        $this->rates = $rates;
+
+        return $this;
+    }
+    
+    public function addRate(){
+        $this->rates = $this->rates+1;
+        
+        return $this;
+    }
+
+    /**
+     * Get rates
+     *
+     * @return integer 
+     */
+    public function getRates()
+    {
+        return $this->rates;
+    }
+    
+    /**
+     * Set rates
+     *
+     * @param integer $rates
+     * @return Campaign
+     */
+    public function setTotalRate($rate)
+    {
+        $this->totalRate = $rate;
+
+        return $this;
+    }
+    
+    public function addTotalRate($rate){
+        $this->totalRate = $this->totalRate + $rate;
+        
+        return $this;
+    }
+
+    /**
+     * Get rates
+     *
+     * @return integer 
+     */
+    public function getTotalRate()
+    {
+        return $this->totalRate;
     }
 
     /**
@@ -322,5 +397,29 @@ class Campaign
     
     public function __toString() {
         return $this->title;
+    }
+    
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
+    
+    public function getTags()
+    {
+        $this->tags = $this->tags ?: new ArrayCollection();
+
+        return $this->tags;
+    }
+
+    public function getTaggableType()
+    {
+        return 'campaign';
+    }
+
+    public function getTaggableId()
+    {
+        return $this->getId();
     }
 }

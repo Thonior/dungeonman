@@ -57,25 +57,31 @@
                 <th>Bonustype</th>
                 <td>{{ entity.bonusType }}</td>
             </tr>
+            <tr>
+                <th>Tags</th>
+                <td>
+                    <ul>
+                        {% for tag in entity.tags %}
+                            <li>{{ tag }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
         </tbody>
     </table>
 
-        <ul class="record_actions">
-    <li>
+
         <a href="{{ path('weapon') }}">
             Back to the list of weapons
         </a>
-    </li>
-    <li>
+    <br/>
         <a href="{{ path('item') }}">
             Back to the list of items
         </a>
-    </li>
-    <li>
+    <br/>
         <a href="{{ path('weapon_edit', { 'id': entity.id }) }}">
             Edit
         </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+    {{ form(delete_form) }}
+
 {% endblock %}

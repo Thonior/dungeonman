@@ -26,6 +26,7 @@ class WeaponType extends AbstractType
             ->add('critBonus')
             ->add('bonus')
             ->add('bonusType')
+            ->add('tags', 'text')
         ;
     }
     

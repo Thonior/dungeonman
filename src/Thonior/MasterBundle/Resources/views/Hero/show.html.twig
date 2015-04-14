@@ -2,7 +2,12 @@
 
 {% block body -%}
     <h1>Hero</h1>
-
+    <div id="votes">
+        {{ form_start(rate_form, {'attr':{'id' : 'rateform'} }) }}
+        {{ form_errors(rate_form) }}
+        {{ form_end(rate_form) }}
+    </div>
+    (based on {{entity.rates}} votes)
     <table class="record_properties">
         <tbody>
             <tr>
@@ -26,27 +31,40 @@
                 <td>{{ entity.media }}</td>
             </tr>
             <tr>
-                <th>Script</th>
-                <td>{{ entity.script }}</td>
-            </tr>
-            <tr>
                 <th>Health</th>
                 <td>{{ entity.health }}</td>
+            </tr>
+            <tr>
+                <th>Tags</th>
+                <td>
+                    <ul>
+                        {% for tag in entity.tags %}
+                            <li>{{ tag }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
             </tr>
         </tbody>
     </table>
 
-        <ul class="record_actions">
-    <li>
+
         <a href="{{ path('hero') }}">
             Back to the list
-        </a>
-    </li>
-    <li>
+        </a><br/>
         <a href="{{ path('hero_edit', { 'id': entity.id }) }}">
             Edit
         </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+        {{ form(delete_form) }}
+
+<script>
+    $(document).ready(function(){
+        $('.rating-well div').click(function(){
+            var value = $(this).data('value');
+            $.post("{{path('hero_rate')}}", {'id': "{{entity.id}}",'stars':value})
+                    .done(function(data){
+                        setCookie('voted_hero_{{entity.id}}',value,1000);
+                    });
+        });
+    });
+</script>
 {% endblock %}

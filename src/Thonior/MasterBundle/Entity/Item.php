@@ -3,6 +3,8 @@
 namespace Thonior\MasterBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use DoctrineExtensions\Taggable\Taggable;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Item
@@ -14,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\DiscriminatorMap({"weapon" = "Weapon", "armor" = "Armor", "misc" = "Item"})
  * 
  */
-class Item
+class Item implements Taggable
 {
     /**
      * @var integer
@@ -35,7 +37,7 @@ class Item
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="string", length=255)
+     * @ORM\Column(name="description", type="text")
      */
     private $description;
 
@@ -79,6 +81,31 @@ class Item
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $author;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="rating", type="integer")
+     */
+    private $rating = 0;
+    
+     /**
+     * @var integer
+     *
+     * @ORM\Column(name="rates", type="integer")
+     */
+    private $rates = 0;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="total_rate", type="integer")
+     */
+    private $totalRate = 0;
+    
+    
+    private $tags;
+    
     
     /**
      * Get id
@@ -235,6 +262,89 @@ class Item
         $this->weight = $weight;
         return $this;
     }
+    
+     /**
+     * Set rating
+     *
+     * @param integer $rating
+     * @return Campaign
+     */
+    public function setRating($rating)
+    {
+        $this->rating = $rating;
+
+        return $this;
+    }
+
+    /**
+     * Get rating
+     *
+     * @return integer 
+     */
+    public function getRating()
+    {
+        return $this->rating;
+    }
+    
+    
+    /**
+     * Set rates
+     *
+     * @param integer $rates
+     * @return Campaign
+     */
+    public function setRates($rates)
+    {
+        $this->rates = $rates;
+
+        return $this;
+    }
+    
+    public function addRate(){
+        $this->rates = $this->rates+1;
+        
+        return $this;
+    }
+
+    /**
+     * Get rates
+     *
+     * @return integer 
+     */
+    public function getRates()
+    {
+        return $this->rates;
+    }
+    
+    /**
+     * Set rates
+     *
+     * @param integer $rates
+     * @return Campaign
+     */
+    public function setTotalRate($rate)
+    {
+        $this->totalRate = $rate;
+
+        return $this;
+    }
+    
+    public function addTotalRate($rate){
+        $this->totalRate = $this->totalRate + $rate;
+        
+        return $this;
+    }
+
+    /**
+     * Get rates
+     *
+     * @return integer 
+     */
+    public function getTotalRate()
+    {
+        return $this->totalRate;
+    }
+    
     /************************************/
     
     private $isAuthor;
@@ -259,5 +369,28 @@ class Item
         return $this;
     }
     
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
+    
+    public function getTags()
+    {
+        $this->tags = $this->tags ?: new ArrayCollection();
+
+        return $this->tags;
+    }
+
+    public function getTaggableType()
+    {
+        return 'item';
+    }
+
+    public function getTaggableId()
+    {
+        return $this->getId();
+    }
     
 }

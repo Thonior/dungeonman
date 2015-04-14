@@ -10,6 +10,7 @@
                 <th>Rating</th>
                 <th>Introduction</th>
                 <th>Actions</th>
+                <th>Rating</th>
             </tr>
         </thead>
         <tbody>
@@ -18,22 +19,20 @@
                 <td>{{ entity.title }}</td>
                 <td>{{ entity.rating }}</td>
                 <td>{{ entity.introduction }}</td>
+                
                 <td>
                     <a class="btn btn-primary" href="{{ path('campaign_show', { 'id': entity.id }) }}">show</a>
                     {% if entity.isAuthor %}
                         <a class="btn btn-primary" href="{{ path('campaign_edit', { 'id': entity.id }) }}">edit</a>
                     {% endif %}
                 </td>
+                <td>{{ entity.rating|rating }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-        <ul>
-        <li>
-            <a href="{{ path('campaign_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
+    
+    <a href="{{ path('campaign_new') }}">
+        Create a new entry
+    </a>
     {% endblock %}

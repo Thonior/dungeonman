@@ -62,8 +62,12 @@ class ArmorController extends myController
             $entity->setAuthor($user);
             $entity->setUniverse($universe);
             
+            $tagman = $this->tag($form['tags']->getData(),$entity);
+            
             $em->persist($entity);
             $em->flush();
+            
+            $tagman->saveTagging($entity);
 
             return $this->redirect($this->generateUrl('armor_show', array('id' => $entity->getId())));
         }
@@ -108,7 +112,7 @@ class ArmorController extends myController
 
         return array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'edit_form'   => $form->createView(),
         );
     }
 
@@ -128,6 +132,8 @@ class ArmorController extends myController
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Armor entity.');
         }
+        
+        $entity = $this->getTags($entity);
 
         $deleteForm = $this->createDeleteForm($id);
 
@@ -157,6 +163,8 @@ class ArmorController extends myController
             throw $this->createNotFoundException('Unable to find Armor entity.');
         }
 
+        $entity = $this->getSerializedTags($entity);
+        
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
         
@@ -210,7 +218,13 @@ class ArmorController extends myController
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+            
+            $tagman = $this->tag($editForm['tags']->getData(),$entity);
+            
+            $em->persist($entity);
             $em->flush();
+            
+            $tagman->saveTagging($entity);
 
             return $this->redirect($this->generateUrl('armor_edit', array('id' => $id)));
         }
