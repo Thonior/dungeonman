@@ -6,13 +6,10 @@
     <table class="table">
         <thead>
             <tr>
+                <th>Image</th>
                 <th>Name</th>
                 <th>Alignment</th>
                 <th>Level</th>
-                <th>Description</th>
-                <th>Media</th>
-                <th>Script</th>
-                <th>Health</th>
                 <th>Actions</th>
                 <th>Rating</th>
             </tr>
@@ -20,13 +17,14 @@
         <tbody>
         {% for entity in entities %}
             <tr>
+                <td>
+                {% if entity.path %}
+                    <img width="50px" src="{{basepath}}{{entity.webPath}}"/>
+                {% endif %}
+                </td>
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.alignment }}</td>
                 <td>{{ entity.level }}</td>
-                <td>{{ entity.description }}</td>
-                <td>{{ entity.media }}</td>
-                <td>{{ entity.script }}</td>
-                <td>{{ entity.health }}</td>
                 <td>
                     <a class="btn btn-primary" href="{{ path('hero_show', { 'id': entity.id }) }}">show</a>
                     {% if entity.isAuthor %}

@@ -10,6 +10,11 @@
     {{ form_widget(edit_form.name, { 'attr': {'class': 'form-control' } }) }}
     </div>
     <div class="form-group">
+    {{ form_label(edit_form.file) }}
+    {{ form_errors(edit_form.file) }}
+    {{ form_widget(edit_form.file, { 'attr': {'class': 'form-control'} }) }}
+    </div>
+    <div class="form-group">
     {{ form_label(edit_form.alignment) }}
     {{ form_errors(edit_form.alignment) }}
     {{ form_widget(edit_form.alignment, { 'attr': {'class': 'form-control'} }) }}
@@ -23,11 +28,6 @@
     {{ form_label(edit_form.description) }}
     {{ form_errors(edit_form.description) }}
     {{ form_widget(edit_form.description, { 'attr': {'class': 'form-control'} }) }}
-    </div>
-    <div class="form-group">
-    {{ form_label(edit_form.media) }}
-    {{ form_errors(edit_form.media) }}
-    {{ form_widget(edit_form.media, { 'attr': {'class': 'form-control'} }) }}
     </div>
     {{ form_label(edit_form.script) }}
     {{ form_errors(edit_form.script) }}

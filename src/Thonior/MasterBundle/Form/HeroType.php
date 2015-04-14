@@ -16,10 +16,10 @@ class HeroType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('file')
             ->add('alignment')
             ->add('level')
             ->add('description')
-            ->add('media')
             ->add('script')
             ->add('health')
             ->add('tags', 'text');

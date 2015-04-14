@@ -6,12 +6,9 @@
     <table class="table">
         <thead>
             <tr>
+                <th>Image</th>
                 <th>Name</th>
                 <th>Description</th>
-                <th>Extra</th>
-                <th>Shopprice</th>
-                <th>Sellprice</th>
-                <th>Weight</th>
                 <th>Actions</th>
                 <th>Rating</th>
             </tr>
@@ -19,12 +16,13 @@
         <tbody>
         {% for entity in entities %}
             <tr>
+                <td>
+                {% if entity.path %}
+                    <img width="50px" src="{{basepath}}{{entity.webPath}}"/>
+                {% endif %}
+                </td>
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.description }}</td>
-                <td>{{ entity.extra }}</td>
-                <td>{{ entity.shopPrice }}</td>
-                <td>{{ entity.sellPrice }}</td>
-                <td>{{ entity.weight }}</td>
                 <td>
                         {% if entity.type == 'armor'%}
                             <a class="btn btn-primary" href="{{ path('armor_show', { 'id': entity.id }) }}">show</a>              

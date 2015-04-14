@@ -16,6 +16,7 @@ class ItemType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('file')
             ->add('description')
             ->add('shopPrice')
             ->add('sellPrice')

@@ -47,7 +47,8 @@ class myController extends Controller
 	}
         $header = array(
             'currentUni' => $currentUni,
-            'universes' => $universes
+            'universes' => $universes,
+            'basepath' => 'http://localhost/dungeonman/web/',
         );
         $view = array_merge($header,$vars);
         return $view;
