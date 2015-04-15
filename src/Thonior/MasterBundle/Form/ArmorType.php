@@ -23,7 +23,7 @@ class ArmorType extends AbstractType
             ->add('CA','integer', array('label'=>'Armor class'))
             ->add('penalty')
             ->add('position')
-            ->add('tags','text')
+            ->add('tags', 'text',array('required' => false));
         ;
     }
     

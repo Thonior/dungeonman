@@ -1,17 +1,49 @@
 {% extends 'ThoniorMasterBundle::content.html.twig' %}
 
 {% block body -%}
+    
     <h1>Chapter edit</h1>
 
-    {{ form_start(edit_form, {'attr':{'id' : 'form'} }) }}
-    {{form_errors(edit_form)}}
+    {{ form_start(edit_form, {'attr':{'id' : 'chapter-form'} }) }}
+        {{form_errors(edit_form)}}
         {{form_row(edit_form.title)}}
         {{form_row(edit_form.content, {'attr' : { 'class': 'tinymce'}})}}
         <input type="hidden" name="campaign" value="{{entity.campaign}}"/>
         <a class="btn btn-primary submit_chapter" >Save</a>
     {{form_end(edit_form)}}
     <div style="display:none;" class="alert alert-success">Saved succesfully</div>
-
+    
+    <div class="searchModal" id="itemModal" >
+        <div class="container">
+            <form method="post" id="itemForm">
+                <div class="form-group">
+                    <label for="search-item">Search</label>
+                    <input id="item-word" name="search-item" class="form-control" style="width: 350px;" type="text"/>
+                    <a class="btn btn-primary submit-item-search" >Search</a>
+                </div>
+            </form>
+            
+            <h1>Results</h1>
+            <ul id="item-list">
+            </ul>
+        </div>
+    </div>
+    
+    <div class="searchModal" id="heroModal" >
+        <div class="container">
+            <form method="post" id="heroForm">
+                <div class="form-group">
+                    <label for="search-hero">Search</label>
+                    <input id="hero-word" name="search-hero" class="form-control" style="width: 350px;" type="text"/>
+                    <a class="btn btn-primary submit-hero-search" >Search</a>
+                </div>
+            </form>
+            
+            <h1>Results</h1>
+            <ul id="hero-list">
+            </ul>
+        </div>
+    </div>
 
     {{ tinymce_init() }}
     <script>
@@ -20,12 +52,83 @@
                 var content = tinyMCE.activeEditor.getContent();
                 $('#thonior_masterbundle_chapter_content').val(content);
 
-                $.post( "{{ path('chapter_update', {'id' : entity.id }) }}", $('#form').serialize())
+                $.post( "{{ path('chapter_update', {'id' : entity.id }) }}", $('#chapter-form').serialize())
                 .done(function( data ) {
                     $('.alert-success').show().delay(5000).fadeOut();
                 });
             });
+            
         });
+        
+        $('.submit-item-search').click(function(){
+            var itemWord = $('#item-word').val();
+            $.post(" {{path('editor_search')}}  ", {name: itemWord,environment:'Item'})
+                .done(function(data){
+                    var items = data['result'];
+                    for(var i=0; i < items.length ; i++){
+                        $('#item-list').append('<li><a data-id="'+items[i]['id']+'" style="cursor:pointer;" class="item">['+items[i]['id']+']'+items[i]['name']+'</a></li>');
+                    }
+                    $('.item').click(function(){
+                        var content = tinyMCE.activeEditor.getContent();
+                        var $content = $(content);
+                        $content.find('.word-selected').html($(this).html());
+                        $content.find('.word-selected').removeClass('word-selected');
+                        tinyMCE.activeEditor.setContent($content.html());
+                        $('#itemModal').hide();
+                        $('.overlay').hide();
+                    });
+            });
+        });
+        
+        $('.submit-hero-search').click(function(){
+            var heroWord = $('#hero-word').val();
+            $.post(" {{path('editor_search')}}  ", {name: heroWord,environment: 'Hero'})
+                .done(function(data){
+                    var heroes = data['result'];
+                    for(var i=0; i < heroes.length ; i++){
+                        $('#hero-list').append('<li><a data-id="'+heroes[i]['id']+'" style="cursor:pointer;" class="hero">['+heroes[i]['id']+']'+heroes[i]['name']+'</a></li>');
+                    }
+                    $('.hero').click(function(){
+                        var content = tinyMCE.activeEditor.getContent();
+                        var $content = $(content);
+                        $content.find('.word-selected').html($(this).html());
+                        $content.find('.word-selected').removeClass('word-selected');
+                        tinyMCE.activeEditor.setContent($content.html());
+                        $('#heroModal').hide();
+                        $('.overlay').hide();
+                    });
+            });
+        });
+        
+        
+        
+        function tinymce_button_item(ed) {
+            ed.focus();
+            $('#itemModal').show();
+            $('.overlay').show();
+            ed.selection.setContent('<span class="itemRef word-selected">Item</span>&nbsp;');
+        }
+        
+        function tinymce_button_hero(ed) {
+            ed.focus();
+            $('#heroModal').show();
+            $('.overlay').show();
+            ed.selection.setContent('<span style="color:green;" class="heroRef word-selected">Hero</span>&nbsp;');
+        }
+        
+        $('.overlay').click(function(){
+                $('#itemModal').hide();
+                $('#heroModal').hide();
+                $('.overlay').hide();
+                
+                var content = tinyMCE.activeEditor.getContent();
+                var $content = $(content);
+                
+                $content.find('.word-selected').remove();
+                
+                tinyMCE.activeEditor.setContent($content.html());
+                //$('#thonior_masterbundle_chapter_content_ifr').html($content.prop('outerHTML'));
+            });
         
         $('#thonior_masterbundle_chapter_submit').hide();
     </script>

@@ -24,22 +24,29 @@
             </tr>
         </tbody>
     </table>
-
-        <ul class="record_actions">
-    <li>
-        <a class="manager" data-path="{{ path('campaign') }}" href="#campaign">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('campaign_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+            
+    <ul id="chapters-navbar" class="nav nav-tabs">
+        {% if entity.haschapters > 0%}
+            {% for chapter in entity.chapters%}
+            <li {% if loop.index == 1%} class="active" {% endif %}>
+                <a data-toggle="tab" data-chapter="{{chapter.id}}" class="chapter-tab" href="#" > Chapter {{ loop.index }}</a>
+            </li>
+            {% endfor %}
+        {% else %}    
+            <li class="active" ><a data-toggle="tab" class="chapter-tab new" href="#">Chapter 1</a></li>
+        {% endif %} 
+    </ul>
+    <div id="viewer"></div>
+    
+    
 <script>
     $(document).ready(function(){
+        {% if entity.haschapters > 0%}
+            $('#viewer').load("{{ path('chapter_show', {'id' : entity.chapters[0].id}) }}");
+        {% else %}
+            $('#viewer').load("{{ path('chapter_show', {'campaign' : entity.id}) }}");
+        {% endif %}
+        
         $('.rating-well div').click(function(){
             var value = $(this).data('value');
             $.post("{{path('campaign_rate')}}", {'id': "{{entity.id}}",'stars':value})
@@ -47,6 +54,15 @@
                         setCookie('voted_campaign_{{entity.id}}',value,1000);
                     });
         });
+        
+        $('.chapter-tab').click(function(){
+            var id = $(this).data('chapter');
+            $.get( "{{path('chapter_show')}}", { id: id} )
+                .done(function( data ) {
+                    $('#viewer').html(data);
+            }); 
+        });
+        
     });
 </script>
 {% endblock %}

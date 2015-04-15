@@ -175,6 +175,41 @@ class ItemController extends myController
         
         return $this->template($request, $vars);
     }
+    
+    /**
+     * Finds and displays a Hero entity.
+     *
+     * @Route("/viewer", name="item_show_viewer")
+     * @Method("POST")
+     */
+    public function showViewerAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $id = $request->request->get('id');
+        
+        $entity = $em->getRepository('ThoniorMasterBundle:Item')->find($id);
+        $template = 'ThoniorMasterBundle:Item:showViewer.html.twig';
+        if($entity->getType() == 'armor'){
+            $template = 'ThoniorMasterBundle:Armor:showViewer.html.twig';
+        }
+        if($entity->getType() == 'weapon'){
+            $template = 'ThoniorMasterBundle:Weapon:showViewer.html.twig';
+        }
+        
+        
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Item entity.');
+        }
+
+
+        $vars = array(
+            'entity' => $entity,
+            'basepath' => 'http://localhost/dungeonman/web/',
+        );
+        return $this->render($template, $vars);
+    }
+    
     /**
      * Displays a form to edit an existing Item entity.
      *

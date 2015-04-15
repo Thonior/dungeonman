@@ -109,14 +109,16 @@ class ChapterController extends myController
     /**
      * Finds and displays a Chapter entity.
      *
-     * @Route("/{id}", name="chapter_show")
+     * @Route("/show", name="chapter_show")
      * @Method("GET")
      * @Template()
      */
-    public function showAction($id)
+    public function showAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-
+        
+        $id = $request->query->get('id');
+        
         $entity = $em->getRepository('ThoniorMasterBundle:Chapter')->find($id);
 
         if (!$entity) {
@@ -196,13 +198,14 @@ class ChapterController extends myController
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createEditForm($entity);
         $editForm->handleRequest($request);
-
+        
         if ($editForm->isValid()) {
             $em->flush();
 
             return $this->redirect($this->generateUrl('chapter_edit', array('id' => $id)));
         }
-
+        //$this->show($editForm);
+        
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),

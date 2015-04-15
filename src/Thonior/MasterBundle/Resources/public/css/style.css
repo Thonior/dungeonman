@@ -10,5 +10,46 @@ root {
     display: block;
 }
 
+.searchModal {
+    display:none; 
+    border: solid 1px;
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    width: 400px;
+    height: 400px;
+    background: #fff;
+    z-index: 20;
+}
 
+.viewerModal {
+    padding: 15px;
+    display:none; 
+    border: solid 1px;
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    width: auto;
+    height: auto;
+    background: #fff;
+    z-index: 20;
+}
 
+.overlay{
+  position: absolute;
+  display:none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background-color: rgba(0,0,0,0.5); /*dim the background*/
+}
+
+.itemRef {
+    color: red;
+}
+
+.heroRef {
+    color: green;
+}

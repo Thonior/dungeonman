@@ -480,7 +480,7 @@ class Item implements Taggable
         return $this;
     }
     
-    private $type;
+    private $type = 'item';
     
     public function getType(){
         return $this->type;

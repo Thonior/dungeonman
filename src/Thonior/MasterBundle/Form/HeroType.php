@@ -14,15 +14,33 @@ class HeroType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        
+        $universe = $options['data']->getUniverse()->getId();
         $builder
             ->add('name')
             ->add('file')
             ->add('alignment')
+            ->add('race','entity', array(
+                'class' => 'Thonior\MasterBundle\Entity\Race',
+                'query_builder' => function ($er) use ($universe) {
+                    return $er->createQueryBuilder('r')
+                            ->where('r.universe = :id')
+                            ->setParameter('id',$universe);
+                }
+            ))
+            ->add('classes','entity', array(
+                'class' => 'Thonior\MasterBundle\Entity\Job',
+                'query_builder' => function ($er) use ($universe) {
+                    return $er->createQueryBuilder('r')
+                            ->where('r.universe = :id')
+                            ->setParameter('id',$universe);
+                }
+            ))
             ->add('level')
             ->add('description')
             ->add('script')
             ->add('health')
-            ->add('tags', 'text');
+            ->add('tags', 'text',array('required' => false));
         ;
     }
     

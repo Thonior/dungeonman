@@ -101,3 +101,40 @@ fpn_tag:
         tag_class:     Thonior\MasterBundle\Entity\Tag
         tagging_class: Thonior\MasterBundle\Entity\Tagging
 
+stfalcon_tinymce:
+        include_jquery: false
+        tinymce_jquery: false
+        selector: ".tinymce"
+        language: %locale%
+        # Custom buttons
+        tinymce_buttons:
+            hero: # Id of the first button
+                title: "Add hero"
+                image: "http://freeflaticons.net/wp-content/uploads/2014/09/frontal-standing-man-silhouette-free-people-icons-1410178120ngk84.png"
+            item: # Id of the first button
+                title: "Add item"
+                image: "https://cdn4.iconfinder.com/data/icons/PLASTICXP/accounting/png/400/treasure.png"
+        theme:
+            # Simple theme: same as default theme
+            simple:
+                content_css: "asset[bundles/thoniormaster/css/style.css]"
+                toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | hero | item"
+                menubar: false
+            # Advanced theme with almost all enabled plugins
+            advanced:
+                 plugins:
+                     - "advlist autolink lists link image charmap print preview hr anchor pagebreak"
+                     - "searchreplace wordcount visualblocks visualchars code fullscreen"
+                     - "insertdatetime media nonbreaking save table contextmenu directionality"
+                     - "emoticons template paste textcolor"
+                 toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+                 toolbar2: "print preview media | forecolor backcolor emoticons | stfalcon | example"
+                 image_advtab: true
+                 templates:
+                     - {title: 'Test template 1', content: 'Test 1'}
+                     - {title: 'Test template 2', content: 'Test 2'}
+            # BBCode tag compatible theme (see http://www.bbcode.org/reference.php)
+            bbcode:
+                 plugins: ["bbcode, code, link, preview"]
+                 menubar: false
+                 toolbar1: "bold,italic,underline,undo,redo,link,unlink,removeformat,cleanup,code,preview"

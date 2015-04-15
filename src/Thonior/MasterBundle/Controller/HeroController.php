@@ -159,6 +159,38 @@ class HeroController extends myController
     }
 
     /**
+     * Finds and displays a Hero entity.
+     *
+     * @Route("/viewer", name="hero_show_viewer")
+     * @Method("POST")
+     * @Template()
+     */
+    public function showViewerAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $id = $request->request->get('id');
+        
+        $entity = $em->getRepository('ThoniorMasterBundle:Hero')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Hero entity.');
+        }
+
+        $entity = $this->getTags($entity);
+        
+        $rateForm = $this->createRateForm($entity);
+        $deleteForm = $this->createDeleteForm($id);
+
+        $vars = array(
+            'entity' => $entity,
+            'basepath' => 'http://localhost/dungeonman/web/',
+        );
+        
+        return $vars;
+    }
+    
+    /**
      * Displays a form to edit an existing Hero entity.
      *
      * @Route("/{id}/edit", name="hero_edit")
@@ -182,6 +214,8 @@ class HeroController extends myController
 
         $entity = $this->getSerializedTags($entity);
         
+        $universe = $request->getSession()->get('universe');
+        
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
         
@@ -203,6 +237,7 @@ class HeroController extends myController
     */
     private function createEditForm(Hero $entity)
     {
+        
         $form = $this->createForm(new HeroType(), $entity, array(
             'action' => $this->generateUrl('hero_update', array('id' => $entity->getId())),
             'method' => 'PUT',

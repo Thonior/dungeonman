@@ -17,7 +17,7 @@ class CampaignType extends AbstractType
         $builder
             ->add('title')
             ->add('introduction')
-            ->add('tags', 'text');
+            ->add('tags', 'text',array('required' => false));
         ;
     }
     

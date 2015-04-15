@@ -101,4 +101,15 @@ class Armor extends Item
     {
         return $this->position;
     }
+    
+    private $type = 'armor';
+    
+    public function getType(){
+        return $this->type;
+    }
+    
+    public function setType($type){
+        $this->type = $type;
+        return $this;
+    }
 }

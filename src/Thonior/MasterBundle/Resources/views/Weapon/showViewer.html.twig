@@ -1,0 +1,61 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>{{entity.name}}</h1>
+    <table class="record_properties">
+        <tbody>
+            {% if entity.path %}
+            <tr>
+                <th>Image</th>
+                <td><img width="50px" src="{{basepath}}{{entity.webPath}}"/></td>
+            </tr>
+            {% endif %}
+            <tr>
+                <th>Description</th>
+                <td>{{ entity.description }}</td>
+            </tr>
+            <tr>
+                <th>Extra</th>
+                <td>{{ entity.extra }}</td>
+            </tr>
+            <tr>
+                <th>Shopprice</th>
+                <td>{{ entity.shopPrice }}</td>
+            </tr>
+            <tr>
+                <th>Sellprice</th>
+                <td>{{ entity.sellPrice }}</td>
+            </tr>
+            <tr>
+                <th>Weight</th>
+                <td>{{ entity.weight }}</td>
+            </tr>
+            <tr>
+                <th>Damage</th>
+                <td>{{ entity.damage }}</td>
+            </tr>
+            <tr>
+                <th>Damagetype</th>
+                <td>{{ entity.damageType }}</td>
+            </tr>
+            <tr>
+                <th>Critchance</th>
+                <td>{{ entity.critChance }}</td>
+            </tr>
+            <tr>
+                <th>Critbonus</th>
+                <td>{{ entity.critBonus }}</td>
+            </tr>
+            <tr>
+                <th>Bonus</th>
+                <td>{{ entity.bonus }}</td>
+            </tr>
+            <tr>
+                <th>Bonustype</th>
+                <td>{{ entity.bonusType }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+{% endblock %}

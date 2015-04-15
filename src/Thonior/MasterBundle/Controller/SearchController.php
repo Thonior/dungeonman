@@ -11,6 +11,7 @@ use Thonior\MasterBundle\Entity\Hero;
 use Thonior\MasterBundle\Form\HeroType;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Hero controller.
@@ -86,6 +87,9 @@ class SearchController extends myController
                 ->orderBy('i.name','DESC')
                 ->setFirstResult(0)
                 ->setMaxResults(2);
+        
+        $stuff = $query->getResult();
+        return $stuff;
     }
     
     private function searchRaces($string, $universe ,$page = 0){
@@ -149,6 +153,60 @@ class SearchController extends myController
         
         $heroes = $query->getResult();
         return $heroes;
+    }
+    
+    /**
+     * Search for editor
+     *
+     * @Route("/editor", name="editor_search")
+     * @Method("POST")
+     * @Template()
+     */
+    public function editorSearchAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        
+        $name = $request->request->get('name');
+        $environment = $request->request->get('environment');
+        
+        $repository = $this->getDoctrine()->getRepository("ThoniorMasterBundle:".$environment);
+        
+        $universe = $request->getSession()->get('universe');
+        $universe = $em->getRepository('ThoniorMasterBundle:Universe')->findOneByName($universe);
+        
+        
+        //$this->show($name);
+        
+        $qb = $repository->createQueryBuilder('s');
+        
+        $query = $qb
+                ->where('s.universe = :universe')
+                ->andWhere(
+                        $qb->expr()->like('s.name',':name')
+                    )
+                ->setParameter('universe', $universe->getId())
+                ->setParameter('name', '%'.$name.'%')
+                ->orderBy('s.name','ASC')
+                ->setFirstResult(0)
+                ->setMaxResults(5)
+                ->getQuery();
+        
+        $items = $query->getResult();
+        $data = array();
+        foreach ($items as $item){
+            $temp = array();
+            $temp['id'] = $item->getId();
+            $temp['name'] = $item->getName();
+            $data[] = $temp;
+        }
+        
+        //$this->show($data);
+        
+        $response = new JsonResponse();
+        $response->setData(array(
+            'result' => $data,
+        ));
+        
+        return $response;
     }
     
 }
